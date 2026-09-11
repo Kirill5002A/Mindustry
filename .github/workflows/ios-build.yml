@@ -26,7 +26,9 @@ jobs:
       - name: Package Unsigned IPA
         run: |
           mkdir -p Payload
-          cp -r ios/build/robovm/IOSLauncher.app Payload/
+          APP_PATH=$(find ios/build/ -name "*.app" -type d | head -n 1)
+          echo "Found app at: $APP_PATH"
+          cp -r "$APP_PATH" Payload/
           zip -r Mindustry-Unsigned.ipa Payload
 
       - name: Upload IPA Artifact

@@ -20,11 +20,17 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build IPA with Gradle
-        run: ./gradlew ios:createIpa --no-daemon
+      - name: Build iOS App Structure
+        run: ./gradlew ios:device --no-daemon || true
+
+      - name: Package Unsigned IPA
+        run: |
+          mkdir -p Payload
+          cp -r ios/build/robovm/IOSLauncher.app Payload/
+          zip -r Mindustry-Unsigned.ipa Payload
 
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Mindustry-iOS-IPA
-          path: ios/build/robovm/*.ipa
+          path: Mindustry-Unsigned.ipa

@@ -20,13 +20,13 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build iOS App Structure
-        run: ./gradlew ios:device --no-daemon || true
+      - name: Build Unsigned App
+        run: ./gradlew ios:device -Probovm.skipSigning=true --no-daemon
 
       - name: Package Unsigned IPA
         run: |
           mkdir -p Payload
-          APP_PATH=$(find ios/build/ -name "*.app" -type d | head -n 1)
+          APP_PATH=$(find . -name "*.app" -type d | head -n 1)
           echo "Found app at: $APP_PATH"
           cp -r "$APP_PATH" Payload/
           zip -r Mindustry-Unsigned.ipa Payload

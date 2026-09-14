@@ -1,28 +1,28 @@
 name: Build iOS IPA
- 
+
 on:
   workflow_dispatch:
- 
+
 jobs:
   build-ios:
     runs-on: macos-latest
- 
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
- 
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
- 
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
- 
+
       - name: Build Unsigned App
-        run: ./gradlew ios:createIPA --no-daemon
- 
+        run: ./gradlew ios:deploy --no-daemon
+
       - name: Package Unsigned IPA
         run: |
           mkdir -p Payload
@@ -30,10 +30,9 @@ jobs:
           echo "Found app at: $APP_PATH"
           cp -r "$APP_PATH" Payload/
           zip -r Mindustry-Unsigned.ipa Payload
- 
+
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Mindustry-iOS-IPA
           path: Mindustry-Unsigned.ipa
-          
